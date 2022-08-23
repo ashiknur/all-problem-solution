@@ -1,0 +1,92 @@
+//0-1 BFS solution
+#include<bits/stdc++.h>
+using namespace std;
+/*
+10 10
+10 4
+10 9
+...*******
+.*.*******
+.*.*******
+.*.*******
+.*.*******
+.*.*......
+.*.*.*****
+.*........
+.********.
+..........
+*/
+int dx[] = {0,0,1,-1};
+int dy[] = {1,-1,0,0};
+struct node{
+    int r;
+    int c;
+    int x;
+    int y;
+};
+
+vector<string>ar;
+bool check(node a)
+{
+//    cout<<"YES "<<a.r<<" "<<a.c<<endl;
+    if(a.r>=0&&a.c>=0&&a.x>=0&&a.y>=0&&a.r<ar.size()&&a.c<ar[0].size()) if(ar[a.r][a.c]!='*') return true;
+    return false;
+}
+bool vis[3000][3000];
+void bfs(int r, int c, int x, int y)
+{
+    deque<node>Q;
+    vis[r][c]=true;
+    Q.push_front({r,c,x,y});
+    while(!Q.empty())
+    {
+        auto u = Q.front();
+//        cout<<u.r<<" "<<u.c<<" "<<u.x<<" "<<u.y<<" ---> " ;
+        Q.pop_front();
+        for(int i=0;i<4;i++)
+        {
+            node v = {u.r+dy[i],u.c+dx[i],u.x,u.y};
+            if(dx[i]==1)
+            {
+                v.y--;
+            }
+            if(dx[i]==-1)
+            {
+                v.x--;
+            }
+//            cout<<v.r<<" "<<v.c<<" "<<v.x<<" "<<v.y<<" "<<check(v)<<endl;
+            if(check(v)&&!vis[v.r][v.c])
+            {
+                vis[v.r][v.c]=true;
+                if(i<=1)Q.push_front(v);
+                else Q.push_back(v);
+            }
+        }
+    }
+}
+
+int main()
+{
+    int n,m,r,c,x,y;
+    cin>>n>>m>>r>>c>>x>>y;
+    for(int i=0;i<n;i++)
+    {
+        string s;
+        cin>>s;
+        ar.push_back(s);
+    }
+    bfs(r-1,c-1,x,y);
+    int cnt=0;
+    for(int i=0;i<n;i++)
+    {
+        for(int j=0;j<m;j++)
+        {
+            cnt+=vis[i][j];
+//            cout<<vis[i][j];
+        }
+//        cout<<endl;
+    }
+    cout<<cnt<<endl;
+    return 0;
+//    cout<<ar[n][n]<<endl;
+}
